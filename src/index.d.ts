@@ -1,6 +1,19 @@
 import { Common } from './stripe-paymentcontext.common';
+import { Observable } from 'tns-core-modules/data/observable';
+
+export interface ISTPEvents {
+    paymentContextDidChange: string;
+    paymentContextDidCreatePaymentResultCompletion: string;
+    paymentContextDidFinishWithError: string;
+    paymentContextDidFailToLoadWithError: string;
+}
+
+export declare const STPEvents: ISTPEvents;
+
 export declare class StripePaymentContext extends Common {
-  // define your typings manually
-  // or..
-  // take the ios or android .d.ts files and copy/paste them here
+  private _customerContext;
+  private _sharedInstance;
+  _paymentContext: any;
+  constructor(url: string, publishableKey: string, appleMerchantIdentifier?: string);
+  readonly paymentContext: any;
 }

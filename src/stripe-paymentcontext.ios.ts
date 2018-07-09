@@ -1,4 +1,4 @@
-import { Common } from './stripe-paymentcontext.common';
+import { Common, STPEvents } from './stripe-paymentcontext.common';
 
 declare var STPPaymentContextDelegate, STPCustomerContext, STPEphemeralKeyProvider, STPPaymentContext, STPPaymentConfiguration;
 
@@ -15,48 +15,36 @@ class StripePaymentContextDelegate extends NSObject {
     }
 
     paymentContextDidChange(context) {
-        // if paymentContext.loading {
-        //     activityIndicator.isHidden = false
-        //     activityIndicator.startAnimating()
-        // } else {
-        //     activityIndicator.isHidden = true
-        //     activityIndicator.stopAnimating()
-        // }
-        // paymentButton.isEnabled = paymentContext.selectedPaymentMethod != nil
-        // paymentLabel.text = paymentContext.selectedPaymentMethod?.label
-        // paymentIcon.image = paymentContext.selectedPaymentMethod?.image
-        console.log("paymentContextDidChange");
+        this._owner.get().notify({
+            eventName: STPEvents.paymentContextDidChange,
+            object: this._owner.get(),
+            data: context
+        });
     }
 
-    paymentContextDidCreatePaymentResultCompletion (context, result, error?) {
-        //    MyAPIClient.createCharge(paymentResult.source.stripeID, completion: { (error: Error?) in
-        //      if let error = error {
-        //        completion(error)
-        //      } else {
-        //        completion(nil)
-        //      }
-        //    })
-        console.log("paymentContextDidCreatePaymentResultCompletion");
+    paymentContextDidCreatePaymentResultCompletion (context, result, completion) {
+        this._owner.get().notify({
+            eventName: STPEvents.paymentContextDidCreatePaymentResultCompletion,
+            object: this._owner.get(),
+            data: [result, completion]
+        });
+        completion(null);
     }
 
-    paymentContextDidFinishWithError(contex, status, error?: NSError) {
-        // switch status {
-        // case .error:
-        //     //      self.showError(error)
-        //     print("Deu merda!!")
-        // case .success:
-        //     //      self.showReceipt()
-        //     print("Funcionou!!")
-        // case .userCancellation:
-        //     return // Do nothing
-        // }
-        console.log("paymentContextDidFinishWithError");
+    paymentContextDidFinishWithStatusError(contex, status, error?: NSError) {
+        this._owner.get().notify({
+            eventName: STPEvents.paymentContextDidChange,
+            object: this._owner.get(),
+            data: [status, error]
+        });
     }
 
     paymentContextDidFailToLoadWithError(paymentContext, error: NSError) {
-        // navigationController?.popViewController(animated: true)
-        // Show the error to your user, etc.
-        console.log("paymentContextDidFailToLoadWithError");
+        this._owner.get().notify({
+            eventName: STPEvents.paymentContextDidChange,
+            object: this._owner.get(),
+            data: error
+        });
     }
 }
 
@@ -76,7 +64,7 @@ export class StripePaymentContext extends Common {
         this._sharedInstance.baseURLString = url;
         this._customerContext = STPCustomerContext.alloc().initWithKeyProvider(this._sharedInstance);
         this._paymentContext = STPPaymentContext.alloc().initWithCustomerContext(this._customerContext);
-        this._paymentContext.delegate = StripePaymentContextDelegate.new();
+        this._paymentContext.delegate = StripePaymentContextDelegate.initWithOwner(new WeakRef(this));
     }
 
     get paymentContext() {
