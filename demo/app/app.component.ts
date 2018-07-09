@@ -3,8 +3,12 @@ import { StripePaymentContext } from "nativescript-stripe-paymentcontext";
 import { StripeSettings } from "./stripe-settings";
 
 @Component({
+    moduleId: module.id,
     selector: "ns-app",
     templateUrl: "app.component.html",
+    styleUrls: [
+        'app.component.css'
+      ],
 })
 
 export class AppComponent {
@@ -26,5 +30,10 @@ export class AppComponent {
     choosePayment() {
         this.checkStripeHostViewController();
         this._stripe.paymentContext.presentPaymentMethodsViewController();
+    }
+
+    request_payment() {
+        this.checkStripeHostViewController();
+        this._stripe.paymentContext.requestPayment();
     }
 }
