@@ -1,6 +1,6 @@
 <StackLayout horizontalAlignment="center" verticalAlignment="center">
     <Button text="Choose Payment" (tap)="choosePayment()" class="btn btn-primary btn-active my-button"></Button>
-    <Button text="Pay now!" (tap)="request_payment()" class="btn btn-primary btn-active my-button" *ngIf="_stripe.paymentContext.selectedPaymentMethod" ></Button>
+    <Button text="Pay now!" (tap)="request_payment()" class="btn btn-primary btn-active my-button" ></Button>
     <StackLayout horizontalAlignment="center" verticalAlignment="center" orientation="horizontal" *ngIf="_stripe.paymentContext.selectedPaymentMethod" >
         <Label text="Using:" *ngIf="_stripe.paymentContext.selectedPaymentMethod"></Label>
         <Image [src]="_stripe.paymentContext.selectedPaymentMethod.image" *ngIf="_stripe.paymentContext.selectedPaymentMethod" class="cc-image"></Image>
