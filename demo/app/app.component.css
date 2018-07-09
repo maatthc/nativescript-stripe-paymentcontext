@@ -1,0 +1,16 @@
+.my-button {
+    background-color: orangered;
+    border-radius: 5;
+    color: white;
+    font-family: FontAwesome;
+    font-size: 24;
+    vertical-align: middle;
+    width: 80%;
+    padding: 10;
+    margin: 20;
+}
+
+.my-button:active {
+    background-color: lightslategray;
+    color:white;
+}
