@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/core";
 import { StripePaymentContext, STPEvents } from "nativescript-stripe-paymentcontext";
 import { StripeSettings } from "./stripe-settings";
 
@@ -9,18 +9,20 @@ import { StripeSettings } from "./stripe-settings";
     styleUrls: [
         'app.component.css'
       ],
+    changeDetection: ChangeDetectionStrategy.Default
 })
 
 export class AppComponent {
     _stripe: StripePaymentContext;
 
-    constructor() {
+    constructor(private changeDetectionRef: ChangeDetectorRef) {
         let settings: StripeSettings = require('./stripe-settings.json');
         this._stripe = new StripePaymentContext(settings.backendUrl, settings.publishableKey, settings.appleMerchantIdentifier);
 
         // this._stripe.on(STPEvents.paymentContextDidChange, (event: any) => {
         this._stripe.on("paymentContextDidChange", (event: any) => {
             console.log(" >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>> STPEvents.paymentContextDidChange");
+            this.changeDetectionRef.detectChanges();
             // console.dir(event);
         });
 
