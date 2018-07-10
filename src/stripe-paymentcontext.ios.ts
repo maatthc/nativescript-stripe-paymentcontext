@@ -1,4 +1,9 @@
 import { Common, STPEvents } from './stripe-paymentcontext.common';
+import * as platform from 'tns-core-modules/platform';
+import {
+    getString,
+    setString,
+} from "tns-core-modules/application-settings";
 
 declare var STPPaymentContextDelegate, STPCustomerContext, STPEphemeralKeyProvider, STPPaymentContext, STPPaymentConfiguration;
 
@@ -76,10 +81,27 @@ class KeyProvider extends NSObject {
     public static ObjCProtocols = [STPEphemeralKeyProvider];
 
     baseURLString: string;
+    // This will identify this user anonymously with Stripe to keep saved cards
+    uuid: string;
+
+    private getUniqueID() {
+        if (getString("UniqueID")){
+            return getString("UniqueID") + "-" + platform.device.uuid;
+        }
+        else {
+            let _rand = this.randomInt(1,10000000).toString();
+            setString("UniqueID", _rand);
+            return _rand + "-" +platform.device.uuid;
+        }
+    }
+    private randomInt(min, max){
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+     }
 
     createCustomerKeyWithAPIVersionCompletion(apiVersion: string, completion) {
         console.log("---->>>> createCustomerKeyWithAPIVersionCompletion");
-        let url = this.baseURLString + "ephemeral_keys?api_version=" + apiVersion;
+        this.uuid = this.getUniqueID();
+        let url = this.baseURLString + "ephemeral_keys?api_version=" + apiVersion + "&uuid=" + this.uuid;
         // console.log("--->>> URL:" + url);
         // console.log("--->>> API VERSION:" + apiVersion);
         httpModule.request({
@@ -87,7 +109,8 @@ class KeyProvider extends NSObject {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             content: JSON.stringify({
-                "api_version": apiVersion
+                "api_version": apiVersion,
+                "uuid": this.uuid
             })
         }).then((response) => {
             const result = response.content.toJSON();
