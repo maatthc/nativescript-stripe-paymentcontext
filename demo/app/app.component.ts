@@ -23,7 +23,6 @@ export class AppComponent {
         this._stripe.on("paymentContextDidChange", (event: any) => {
             console.log(" >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>> STPEvents.paymentContextDidChange");
             this.changeDetectionRef.detectChanges();
-            // console.dir(event);
         });
 
         // this._stripe.on(STPEvents.paymentContextDidCreatePaymentResultCompletion, (event: any) => {
