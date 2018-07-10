@@ -19,7 +19,7 @@ Copy your Publishable key ("pk_test_*") from
 https://dashboard.stripe.com/account/apikeys
 
 
-Deploy the backend piece on Heroku (Free account) using  https://github.com/stripe/example-ios-backend
+Deploy the backend piece on Heroku (Free account) using  https://github.com/maatthc/stripe-paymentcontext-backend
 		
 Give it a App name and use your Stripe Publishable key and save the URL.
 
