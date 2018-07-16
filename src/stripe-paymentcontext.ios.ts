@@ -101,7 +101,7 @@ class KeyProvider extends NSObject {
     createCustomerKeyWithAPIVersionCompletion(apiVersion: string, completion) {
         console.log("---->>>> createCustomerKeyWithAPIVersionCompletion");
         this.uuid = this.getUniqueID();
-        let url = this.baseURLString + "ephemeral_keys?api_version=" + apiVersion + "&uuid=" + this.uuid;
+        let url = this.baseURLString + "?api_version=" + apiVersion + "&uuid=" + this.uuid;
         // console.log("--->>> URL:" + url);
         // console.log("--->>> API VERSION:" + apiVersion);
         httpModule.request({
