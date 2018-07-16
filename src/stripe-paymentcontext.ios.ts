@@ -84,23 +84,24 @@ class KeyProvider extends NSObject {
     // This will identify this user anonymously with Stripe to keep saved cards
     uuid: string;
 
-    private getUniqueID() {
-        if (getString("UniqueID")){
+    public static  getAppUniqueID() {
+        let  randomInt = function (min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+         };
+
+        if (getString("UniqueID")) {
             return getString("UniqueID") + "-" + platform.device.uuid;
         }
         else {
-            let _rand = this.randomInt(1,10000000).toString();
+            let _rand = randomInt(1, 10000000).toString();
             setString("UniqueID", _rand);
-            return _rand + "-" +platform.device.uuid;
+            return _rand + "-" + platform.device.uuid;
         }
     }
-    private randomInt(min, max){
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-     }
 
     createCustomerKeyWithAPIVersionCompletion(apiVersion: string, completion) {
         console.log("---->>>> createCustomerKeyWithAPIVersionCompletion");
-        this.uuid = this.getUniqueID();
+        this.uuid = KeyProvider.getAppUniqueID();
         let url = this.baseURLString + "?api_version=" + apiVersion + "&uuid=" + this.uuid;
         // console.log("--->>> URL:" + url);
         // console.log("--->>> API VERSION:" + apiVersion);
