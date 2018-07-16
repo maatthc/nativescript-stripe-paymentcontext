@@ -6,7 +6,6 @@
     "typings": "index.d.ts",
     "nativescript": {
         "platforms": {
-            "android": "4.0.0",
             "ios": "4.0.0"
         }
     },
