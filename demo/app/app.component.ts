@@ -17,7 +17,7 @@ export class AppComponent {
 
     constructor(private changeDetectionRef: ChangeDetectorRef) {
         let settings: StripeSettings = require('./stripe-settings.json');
-        this._stripe = new StripePaymentContext(settings.backendUrl, settings.publishableKey, settings.appleMerchantIdentifier);
+        this._stripe = new StripePaymentContext(settings.backendUrl + settings.ephemeral_keysUrl, settings.publishableKey, settings.appleMerchantIdentifier);
 
         // this._stripe.on(STPEvents.paymentContextDidChange, (event: any) => {
         this._stripe.on("paymentContextDidChange", (event: any) => {

@@ -1,5 +1,7 @@
 {
-    "backendUrl": "",
-    "publishableKey": "",
-    "appleMerchantIdentifier": ""
+    "backendUrl": "http://192.168.1.96:8080/api/",
+    "ephemeral_keysUrl":"customers/ephemeral_keys",
+    "createChargeUrl":"purchases/",
+    "publishableKey" : "",
+    "appleMerchantIdentifier" : ""
 }
