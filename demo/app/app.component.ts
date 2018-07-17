@@ -40,13 +40,17 @@ export class AppComponent {
             //  payment transaction id
             console.log(event.data[0].source.stripeID);
             const completion = event.data[1](null);
+            if (!getString("AppUniqueID")) {
+                console.error("Setting 'AppUniqueID' does NOT exist!");
+                return;
+            }
             httpModule.request({
                 url: stripSettings.backendUrl + stripSettings.createChargeUrl,
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 content: JSON.stringify({
                     "api_version": 1,
-                    "uuid": 1
+                    "uuid": getString("AppUniqueID")
                 })
             }).then((response) => {
                 const result = response.content.toJSON();
