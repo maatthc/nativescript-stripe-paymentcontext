@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/core";
 import { StripePaymentContext, STPEvents } from "nativescript-stripe-paymentcontext";
 import { StripeSettings } from "./stripe-settings";
+const httpModule = require("http");
 
 @Component({
     moduleId: module.id,
@@ -14,14 +15,16 @@ import { StripeSettings } from "./stripe-settings";
 
 export class AppComponent {
     _stripe: StripePaymentContext;
+    stripSettings: StripeSettings;
 
     constructor(private changeDetectionRef: ChangeDetectorRef) {
-        let settings: StripeSettings = require('./stripe-settings.json');
-        this._stripe = new StripePaymentContext(settings.backendUrl + settings.ephemeral_keysUrl, settings.publishableKey, settings.appleMerchantIdentifier);
+        this.stripSettings = require('./stripe-settings.json');
+        this._stripe = new StripePaymentContext(this.stripSettings.backendUrl + this.stripSettings.ephemeral_keysUrl, this.stripSettings.publishableKey, this.stripSettings.appleMerchantIdentifier);
 
         // this._stripe.on(STPEvents.paymentContextDidChange, (event: any) => {
         this._stripe.on("paymentContextDidChange", (event: any) => {
             console.log(" >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>> STPEvents.paymentContextDidChange");
+            // Update screen components
             this.changeDetectionRef.detectChanges();
         });
 
@@ -29,6 +32,28 @@ export class AppComponent {
         this._stripe.on("paymentContextDidCreatePaymentResultCompletion", (event: any) => {
             console.log(" >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>> STPEvents.paymentContextDidCreatePaymentResultCompletion");
             console.dir(event);
+            console.dir(event);
+            console.log(event.data[0].source);
+            //  payment transaction id
+            console.log(event.data[0].source.stripeID);
+            const completion = event.data[1](null);
+            httpModule.request({
+                url: this.stripSettings.backendUrl + this.stripSettings.createChargeUrl,
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                content: JSON.stringify({
+                    "api_version": 1,
+                    "uuid": 1
+                })
+            }).then((response) => {
+                const result = response.content.toJSON();
+                console.dir(result);
+                // Should  trigger the call of paymentContext:didFinishWithStatus:error
+                completion(null);
+            }, (e) => {
+                console.error(e);
+                completion(e);
+            });
         });
 
         // this._stripe.on(STPEvents.paymentContextDidFailToLoadWithError, (event: any) => {
