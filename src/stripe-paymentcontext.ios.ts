@@ -89,13 +89,13 @@ class KeyProvider extends NSObject {
             return Math.floor(Math.random() * (max - min + 1)) + min;
          };
 
-        if (getString("UniqueID")) {
-            return getString("UniqueID") + "-" + platform.device.uuid;
+        if (getString("AppUniqueID")) {
+            return getString("AppUniqueID");
         }
         else {
-            let _rand = randomInt(1, 10000000).toString();
-            setString("UniqueID", _rand);
-            return _rand + "-" + platform.device.uuid;
+            let _rand = randomInt(1, 10000000).toString() + "-" + platform.device.uuid;
+            setString("AppUniqueID", _rand);
+            return _rand;
         }
     }
 

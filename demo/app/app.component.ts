@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/
 import { StripePaymentContext, STPEvents } from "nativescript-stripe-paymentcontext";
 import { StripeSettings } from "./stripe-settings";
 const httpModule = require("http");
+import { getString, setString } from "tns-core-modules/application-settings";
 
 @Component({
     moduleId: module.id,
@@ -24,7 +25,7 @@ export class AppComponent {
         // this._stripe.on(STPEvents.paymentContextDidChange, (event: any) => {
         this._stripe.on("paymentContextDidChange", (event: any) => {
             console.log(" >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>> STPEvents.paymentContextDidChange");
-            // Update screen components
+            // Update the user interface
             this.changeDetectionRef.detectChanges();
         });
 
@@ -37,13 +38,17 @@ export class AppComponent {
             //  payment transaction id
             console.log(event.data[0].source.stripeID);
             const completion = event.data[1](null);
+            if (!getString("AppUniqueID")) {
+                console.error("Setting 'AppUniqueID' does NOT exist!");
+                return;
+            }
             httpModule.request({
                 url: this.stripSettings.backendUrl + this.stripSettings.createChargeUrl,
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 content: JSON.stringify({
                     "api_version": 1,
-                    "uuid": 1
+                    "uuid": getString("AppUniqueID")
                 })
             }).then((response) => {
                 const result = response.content.toJSON();
