@@ -33,28 +33,52 @@ export class AppComponent {
         this._stripe.on("paymentContextDidCreatePaymentResultCompletion", (event: any) => {
             console.log(" >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>> STPEvents.paymentContextDidCreatePaymentResultCompletion");
             console.dir(event);
-            console.dir(event);
-            console.log(event.data[0].source);
             //  payment transaction id
-            console.log(event.data[0].source.stripeID);
-            const completion = event.data[1](null);
+            const source = event.data[0].source.stripeID;
+            const completion = event.data[1];
             if (!getString("AppUniqueID")) {
                 console.error("Setting 'AppUniqueID' does NOT exist!");
                 return;
             }
+            let json_payload = {
+                    "api_version": 1,
+                    "customerAppUuid": getString("AppUniqueID"),
+                    "source": source,
+                    "amount": 100,
+                    "currency": "AUD",
+                    "country": "AU",
+                    "shoppingCart": [
+                        {
+                            "price": 50,
+                            "tittle": "Book",
+                            "keycode": 1,
+                            "quantity" : 1
+                        },
+                        {
+                            "price": 25,
+                            "tittle": "Hat",
+                            "keycode": 1,
+                            "quantity" : 2
+                        }
+                    ],
+                    "loyaltyCard": 666,
+            };
             httpModule.request({
                 url: this.stripSettings.backendUrl + this.stripSettings.createChargeUrl,
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                content: JSON.stringify({
-                    "api_version": 1,
-                    "uuid": getString("AppUniqueID")
-                })
+                content: JSON.stringify(json_payload),
             }).then((response) => {
-                const result = response.content.toJSON();
-                console.dir(result);
-                // Should  trigger the call of paymentContext:didFinishWithStatus:error
-                completion(null);
+                if (response.statusCode === 200) {
+                    console.log(response.content);
+                    console.dir(completion);
+                    // Should  trigger the call of paymentContext:didFinishWithStatus:error
+                    completion(null);
+                } else {
+                    console.error(response.content);
+                    completion(response.content);
+                }
+
             }, (e) => {
                 console.error(e);
                 completion(e);
