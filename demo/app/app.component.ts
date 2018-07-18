@@ -98,11 +98,16 @@ export class AppComponent {
 
         // this._stripe.on(STPEvents.paymentContextDidFinishWithStatusError, (event: any) => {
         this._stripe.on("paymentContextDidFinishWithStatusError", (event: any) => {
+            // console.dir(event.data);
             console.log(" || >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>> STPEvents.paymentContextDidFinishWithStatusError !!");
             const status = event.data[0];
             const error = event.data[1];
             this.isStripeBusy = false;
             this.changeDetectionRef.detectChanges();
+            if (status === 2){
+                // ApplePay Cancel button
+                return;
+            }
             if (status === 0){
                 dialogs.alert({
                     title: "Payment Result",
