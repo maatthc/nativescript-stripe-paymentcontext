@@ -1,8 +1,7 @@
 # Nativescript Stripe PaymentContext Plugin
 
-Ignore: Add your plugin badges here. See [nativescript-urlhandler](https://github.com/hypery2k/nativescript-urlhandler) for example.
-
-Add Stripe Payment to your Nativescript App on iOS (Android coming soon).
+Easly Add Stripe Payment to your Nativescript App on iOS (Android coming soon).
+Create you virtual wallet: save multiple credit card token - Supports Apple Pay!
 
 
 ![Screenshot](https://stripe.com/img/blog/posts/ui-components-for-ios/wallet@2x.png "Screenshot")
@@ -19,7 +18,7 @@ Copy your Publishable key ("pk_test_*") from
 https://dashboard.stripe.com/account/apikeys
 
 
-Deploy the backend piece on Heroku (Free account) using  https://github.com/maatthc/stripe-paymentcontext-backend
+Deploy the backend piece on Heroku (Free account) or host it yourself using  https://github.com/maatthc/stripe-paymentcontext-backend
 		
 Give it a App name and use your Stripe Publishable key and save the URL.
 
@@ -41,21 +40,15 @@ cd src
 npm run demo.ios
 ```
 
+## Apple Pay 
 
 Stop/Close the execution after it shows you the application.
 
 Open the Xcode Workspace at ./nativescript-stripe-paymentcontext/demo/platforms/ios/demo.xcworkspace
 
-Set up your Bundle Identifier and Apple Pay.
+Enable Apple Pay on your project "Capabilities" - you might need to set up your app Bundle Identifier.
 
 You are good to go.
-## Usage 
-
-Not yet.
-
-## API
-
-Not even close.
 
 ## License
 
