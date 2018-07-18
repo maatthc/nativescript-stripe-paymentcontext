@@ -4,14 +4,14 @@ import * as app from 'tns-core-modules/application';
 export interface ISTPEvents {
   paymentContextDidChange: string;
   paymentContextDidCreatePaymentResultCompletion: string;
-  paymentContextDidFinishWithError: string;
+  paymentContextDidFinishWithStatusError: string;
   paymentContextDidFailToLoadWithError: string;
 }
 
 export const STPEvents: ISTPEvents = {
   paymentContextDidChange : "paymentContextDidChange",
   paymentContextDidCreatePaymentResultCompletion : "paymentContextDidCreatePaymentResultCompletion",
-  paymentContextDidFinishWithError : "paymentContextDidFinishWithError",
+  paymentContextDidFinishWithStatusError : "paymentContextDidFinishWithStatusError",
   paymentContextDidFailToLoadWithError : "paymentContextDidFailToLoadWithError"
 };
 

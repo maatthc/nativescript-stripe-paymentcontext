@@ -6,4 +6,5 @@
         <Image [src]="_stripe.paymentContext.selectedPaymentMethod.image" *ngIf="_stripe.paymentContext.selectedPaymentMethod" class="cc-image"></Image>
         <Label [text]="_stripe.paymentContext.selectedPaymentMethod.label" *ngIf="_stripe.paymentContext.selectedPaymentMethod" ></Label>
     </StackLayout>
+    <ActivityIndicator #activityIndicator [busy]="isStripeBusy" class="activity-indicator"></ActivityIndicator>
 </StackLayout>

@@ -3,6 +3,7 @@ import { StripePaymentContext, STPEvents } from "nativescript-stripe-paymentcont
 import { StripeSettings } from "./stripe-settings";
 const httpModule = require("http");
 import { getString, setString } from "tns-core-modules/application-settings";
+import * as dialogs from "ui/dialogs";
 
 @Component({
     moduleId: module.id,
@@ -17,6 +18,7 @@ import { getString, setString } from "tns-core-modules/application-settings";
 export class AppComponent {
     _stripe: StripePaymentContext;
     stripSettings: StripeSettings;
+    isStripeBusy: boolean = false;
 
     constructor(private changeDetectionRef: ChangeDetectorRef) {
         this.stripSettings = require('./stripe-settings.json');
@@ -32,8 +34,11 @@ export class AppComponent {
         // this._stripe.on(STPEvents.paymentContextDidCreatePaymentResultCompletion, (event: any) => {
         this._stripe.on("paymentContextDidCreatePaymentResultCompletion", (event: any) => {
             console.log(" >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>> STPEvents.paymentContextDidCreatePaymentResultCompletion");
-            console.dir(event);
+            // console.dir(event);
             //  payment transaction id
+            this.isStripeBusy = true;
+            // Update the user interface
+            this.changeDetectionRef.detectChanges();
             const source = event.data[0].source.stripeID;
             const completion = event.data[1];
             if (!getString("AppUniqueID")) {
@@ -71,7 +76,7 @@ export class AppComponent {
             }).then((response) => {
                 if (response.statusCode === 200) {
                     console.log(response.content);
-                    console.dir(completion);
+                    // console.dir(completion);
                     // Should  trigger the call of paymentContext:didFinishWithStatus:error
                     completion(null);
                 } else {
@@ -91,10 +96,30 @@ export class AppComponent {
             console.dir(event);
         });
 
-        // this._stripe.on(STPEvents.paymentContextDidFinishWithError, (event: any) => {
-        this._stripe.on("paymentContextDidFinishWithError", (event: any) => {
-            console.log(" >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>> STPEvents.paymentContextDidFinishWithError");
-            console.dir(event);
+        // this._stripe.on(STPEvents.paymentContextDidFinishWithStatusError, (event: any) => {
+        this._stripe.on("paymentContextDidFinishWithStatusError", (event: any) => {
+            console.log(" || >>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>> STPEvents.paymentContextDidFinishWithStatusError !!");
+            const status = event.data[0];
+            const error = event.data[1];
+            this.isStripeBusy = false;
+            this.changeDetectionRef.detectChanges();
+            if (status === 0){
+                dialogs.alert({
+                    title: "Payment Result",
+                    message: "Your payment was successful ! ",
+                    okButtonText: "Have a nice day."
+                }).then(() => {
+                    console.log("Dialog successful closed!");
+                });
+            } else {
+                dialogs.alert({
+                    title: "Payment Result",
+                    message: "Your payment was NOT successful : " + error.toString() ,
+                    okButtonText: "Please try again."
+                }).then(() => {
+                    console.log("Dialog error closed!");
+                });
+            }
         });
     }
 

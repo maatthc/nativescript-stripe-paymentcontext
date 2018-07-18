@@ -33,12 +33,11 @@ class StripePaymentContextDelegate extends NSObject {
             object: this._owner.get(),
             data: [result, completion]
         });
-        completion(null);
     }
 
-    paymentContextDidFinishWithStatusError(contex, status, error?: NSError) {
+    paymentContextDidFinishWithStatusError(context, status, error?: NSError) {
         this._owner.get().notify({
-            eventName: STPEvents.paymentContextDidChange,
+            eventName: STPEvents.paymentContextDidFinishWithStatusError,
             object: this._owner.get(),
             data: [status, error]
         });
