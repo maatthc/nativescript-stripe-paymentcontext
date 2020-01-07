@@ -1,3 +1,3 @@
 platform :ios, '9.0'
-pod 'Stripe'
+pod 'Stripe', '13.2.0'
 pod 'CardIO'
