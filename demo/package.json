@@ -1,6 +1,6 @@
 {
   "nativescript": {
-    "id": "org.nativescript.demo",
+    "id": "br.com.maat.stripe.demo",
     "tns-ios": {
       "version": "4.2.0"
     }
