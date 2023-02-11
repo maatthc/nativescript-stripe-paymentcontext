@@ -52,7 +52,7 @@
     "webpack": "~4.5.0",
     "webpack-bundle-analyzer": "^2.9.1",
     "uglifyjs-webpack-plugin": "~1.2.4",
-    "webpack-cli": "~2.0.14",
+    "webpack-cli": "~5.0.1",
     "webpack-sources": "~1.1.0",
     "@angular/compiler-cli": "~6.0.0",
     "@ngtools/webpack": "~6.0.3",
